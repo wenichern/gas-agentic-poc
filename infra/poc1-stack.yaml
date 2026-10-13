@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Minimal resources for POC 1 (alerts + work orders). Deploy with scripts/deploy.sh
+Parameters:
+  AlertEmail: {Type: String, Description: Email to receive alerts}
+Resources:
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription: [{Protocol: email, Endpoint: !Ref AlertEmail}]
+  WorkOrders:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions: [{AttributeName: id, AttributeType: S}]
+      KeySchema: [{AttributeName: id, KeyType: HASH}]
+      SSESpecification: {SSEEnabled: true}
+  AgentPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Least-privilege policy for the POC agent
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - {Effect: Allow, Action: ['bedrock:InvokeModel', 'bedrock:Converse'], Resource: '*'}
+          - {Effect: Allow, Action: 'sns:Publish', Resource: !Ref AlertTopic}
+          - {Effect: Allow, Action: 'dynamodb:PutItem', Resource: !GetAtt WorkOrders.Arn}
+Outputs:
+  AlertTopicArn: {Value: !Ref AlertTopic}
+  WorkOrderTable: {Value: !Ref WorkOrders}
+  AgentPolicyArn: {Value: !Ref AgentPolicy}
