@@ -7,7 +7,7 @@ Learn to build and prompt AI agents for a natural gas business unit. Starts offl
 |---|-------|--------|--------|
 | 1 | Field Operations Assistant | **Runnable** | `poc1_field_ops/prompts/system.md` |
 | 2 | Supply-Chain Optimization | Prompt + exercises | `prompts/02_supply_chain.md` |
-| 3 | Regulatory Compliance | Prompt + exercises | `prompts/03_compliance.md` |
+| 3 | Regulatory Compliance (RAG) | **Runnable** | `poc3_compliance/` |
 | 4 | Safety Monitoring | Prompt + exercises | `prompts/04_safety.md` |
 | 5 | Customer Service Chatbot | Prompt + exercises | `prompts/05_customer_service.md` |
 | 6 | Trading & Risk (decision support) | Prompt + exercises | `prompts/06_trading_risk.md` |
@@ -34,6 +34,9 @@ scripts/deploy.sh you@company.com   # SNS + DynamoDB + least-privilege policy
 scripts/destroy.sh                  # clean up
 ```
 Outputs are also written to `out/alerts.jsonl` and `out/work_orders.jsonl`.
+
+## POC 3 (Compliance RAG)
+`python poc3_compliance/agent.py --mock`; see `poc3_compliance/README.md` and `KB_SETUP.md`.
 
 ## How it works
 `agent.py` is the whole agent pattern: send messages + tool definitions to Bedrock Converse, run any tool the model requests, return results, repeat until done (capped at 8 steps). Sensors are simulated in `tools.py`; replace them with IoT Core / historian reads when ready.

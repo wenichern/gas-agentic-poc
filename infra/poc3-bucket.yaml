@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Encrypted private S3 bucket for the POC 3 compliance corpus
+Resources:
+  CorpusBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}}]
+      PublicAccessBlockConfiguration: {BlockPublicAcls: true, BlockPublicPolicy: true, IgnorePublicAcls: true, RestrictPublicBuckets: true}
+      VersioningConfiguration: {Status: Enabled}
+Outputs:
+  BucketName: {Value: !Ref CorpusBucket}
